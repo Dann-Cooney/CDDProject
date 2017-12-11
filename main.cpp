@@ -4,11 +4,11 @@
 			 Daniel Cooney
 
 	Start Date: 2/12/17
-	
+
 	Descritpion: Implementation of the Wator Simulation 
 
-	Last Updated: Time - 14:34
-				  Date - 5/12/17 
+	Last Updated: Time - 14:29
+			     Date - 11/12/17 
 
 ----------------------------------------------------
  */
@@ -23,9 +23,12 @@
 
 using namespace std;
 
-char const water = '.';
-char const fish = 'O';
-char const shark = 'X';
+
+
+char water = '.';
+char fish = 'O';
+char shark = 'X';
+
 
 class Grid
 {
@@ -35,7 +38,7 @@ public:
     int hunger;
     bool processed;
 
-// blank constructor
+// Constructor for the Grid.
     Grid()
 {
     symbol = water;
@@ -43,6 +46,8 @@ public:
     hunger = 0;
     
 }
+
+// Contstructor for types: Fish and Sharks
    Grid(char type)
 {
    if (type == fish)
@@ -61,7 +66,7 @@ public:
 };
 
 
-int nFish = 1;
+int nFish = 7;
 int nShark = 0;
 int const width = 15;
 int const height = 15;
@@ -111,54 +116,68 @@ bool check(vector<vector<Grid>> &sea , int x ,int y)
 	int x2;
 	int y2;
 }
+
+// Method for the next move of the fish
 void moveFish(vector<vector<Grid>> &sea , int x ,int y)
 {
+	//creating variables for the next available position 
 	bool up = check(sea, x , y -1 );
 	bool down  = check(sea, x , y + 1 );
 	bool left  = check(sea, x -1 , y);
 	bool right  = check(sea, x +1, y);
-
+   
+	//creating this varible to make a random move.
 	int direction = rand() % 4; 
-	int i = 0;
+
 
 
 		if (direction == 0 && left)
 		{
-			//left
-			cout << "left";
-			int newPos = (y - 1) % height;
+			int newPos = y - 1;
+			if(newPos < 0)
+			{
+				newPos = width - 1;
+			}
 			sea[x][newPos] = sea[x][y];
 			sea[x][newPos].processed = true;
 			sea[x][y] = Grid();
-			i = 4;
 		}
 		else if (direction == 1 && right)
 		{
-			cout << "right";
-			int newPos = (y + 1) % height;
-			
+		
+			int newPos = y + 1;
+			if(newPos >= width)
+			{
+				newPos = 0;
+			}
 			sea[x][newPos] = sea[x][y];
 			sea[x][newPos].processed = true;
 			sea[x][y] = Grid();
-			i = 4;
 		}
 		else if (direction == 2 && up)
 		{
-			cout << "up";
-			int newPos = (x - 1) % width;
+			
+			int newPos = x - 1;
+			if(newPos < 0)
+			{
+				newPos = height -1;
+			}
 			sea[newPos][y] = sea[x][y];
 			sea[newPos][y].processed = true;
 			sea[x][y] = Grid();
-			i = 4;
+		
 		}
 		else if (direction == 3 && down)
 		{
-			cout << "down";
-			int newPos = (x + 1) % width;
+			 
+			int newPos = x + 1 ;
+			if(newPos >= height)
+			{
+				newPos = 0;
+			}
 			sea[newPos][y] = sea[x][y];
 			sea[newPos][y].processed = true;
 			sea[x][y] = Grid();
-			i = 4;
 		}
 	
 }
