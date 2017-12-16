@@ -66,10 +66,10 @@ public:
 };
 
 
-int nFish = 7;
-int nShark = 3;
-int const width = 15;
-int const height = 15;
+int nFish = 6;
+int nShark = 1;
+int const width = 3;
+int const height = 3;
 int randomXPos = 0;
 int randomYPos = 0;
 
@@ -78,11 +78,11 @@ int randomYPos = 0;
 void draw(vector<vector<Grid>> &sea )
 {
 	system("clear");
-for(int i = 0; i < width; i++)
+for(int i = 0; i < height; i++)
     {
-        for(int j= 0; j < height; j++)
+        for(int j= 0; j < width; j++)
             {
-		cout << sea[i][j].symbol;
+		cout << sea[j][i].symbol;
 	    }
 	cout << endl;
     }
@@ -100,10 +100,11 @@ void populate(vector<vector<Grid>> &sea , int nFish, int nShark)
 		sea[randomXPos][randomYPos] = Grid(fish);
 		--nFish;
 	    }
+
+	    
 	    else if (sea[randomXPos][randomYPos].symbol == fish)
 	    {
 	    	cout << "here";
-
 	    }
 	}
 
@@ -116,20 +117,80 @@ void populate(vector<vector<Grid>> &sea , int nFish, int nShark)
 		sea[randomXPos][randomYPos] = Grid(shark);
 		--nShark;
 	    }
-	     else if (sea[randomXPos][randomYPos].symbol == shark)
-	    {
-
-	    }
-	     else
-	    {
-
-	    }
 	}
 }
 bool check(vector<vector<Grid>> &sea , int x ,int y)
 {
-	int x2;
-	int y2;
+	if (x < 0 || x >= width)
+	{
+		if(x < 0)
+		{
+			x = width -1;
+		}
+		else
+		{
+			x = 0;
+		}
+	}
+	if (y < 0 || y >= height)
+	{
+		if(y < 0)
+		{
+			y = height -1;
+		}
+		else
+		{
+			y = 0;
+		}
+	}
+	if(sea[x][y].symbol == water)
+	{
+		cout << "W";
+		return true;
+
+	}
+	else
+	{
+		cout << "N";
+		return false;
+	}
+}
+
+bool checkFish(vector<vector<Grid>> &sea , int x ,int y)
+{
+	if (x < 0 || x >= width)
+	{
+		if(x < 0)
+		{
+			x = width -1;
+		}
+		else
+		{
+			x = 0;
+		}
+	}
+	if (y < 0 || y >= height)
+	{
+		if(y < 0)
+		{
+			y = height -1;
+		}
+		else
+		{
+			y = 0;
+		}
+	}
+	if(sea[x][y].symbol == fish)
+	{
+		cout << "W";
+		return true;
+
+	}
+	else
+	{
+		cout << "N";
+		return false;
+	}
 }
 
 // Method for the next move of the fish
@@ -140,12 +201,20 @@ void moveFish(vector<vector<Grid>> &sea , int x ,int y)
 	bool down  = check(sea, x , y + 1 );
 	bool left  = check(sea, x -1 , y);
 	bool right  = check(sea, x +1, y);
+	int option = 0;
+	if(up || down || left || right)
+	{
+		option = 1;
+	}
    
 	//creating this varible to make a random move.
-	int direction = rand() % 4; 
+	while (option > 0)
+	{
+		int direction = rand() % 4; 
 
-		if (direction == 0 && left)
+		if (direction == 0 && up)
 		{
+			cout << "UP" << endl;
 			int newPos = y - 1;
 			if(newPos < 0)
 			{
@@ -154,10 +223,11 @@ void moveFish(vector<vector<Grid>> &sea , int x ,int y)
 			sea[x][newPos] = sea[x][y];
 			sea[x][newPos].processed = true;
 			sea[x][y] = Grid();
+			option = 0;
 		}
-		else if (direction == 1 && right)
+		else if (direction == 1 && down)
 		{
-		
+			cout << "DOWN" << endl;
 			int newPos = y + 1;
 			if(newPos >= width)
 			{
@@ -166,10 +236,11 @@ void moveFish(vector<vector<Grid>> &sea , int x ,int y)
 			sea[x][newPos] = sea[x][y];
 			sea[x][newPos].processed = true;
 			sea[x][y] = Grid();
+			option = 0;
 		}
-		else if (direction == 2 && up)
+		else if (direction == 2 && left)
 		{
-			
+			cout << "LEFT" << endl;
 			int newPos = x - 1;
 			if(newPos < 0)
 			{
@@ -178,11 +249,11 @@ void moveFish(vector<vector<Grid>> &sea , int x ,int y)
 			sea[newPos][y] = sea[x][y];
 			sea[newPos][y].processed = true;
 			sea[x][y] = Grid();
-		
+			option = 0;		
 		}
-		else if (direction == 3 && down)
+		else if (direction == 3 && right)
 		{
-			 
+			 cout << "RIGHT" << endl;
 			int newPos = x + 1 ;
 			if(newPos >= height)
 			{
@@ -191,37 +262,61 @@ void moveFish(vector<vector<Grid>> &sea , int x ,int y)
 			sea[newPos][y] = sea[x][y];
 			sea[newPos][y].processed = true;
 			sea[x][y] = Grid();
+			option = 0;
 		}
+	}
+	
 	
 }
 // Method for the next move of the fish
 void moveShark(vector<vector<Grid>> &sea , int x ,int y)
 {
 	//creating variables for the next available position 
-	bool up = check(sea, x , y -1 );
-	bool down  = check(sea, x , y + 1 );
-	bool left  = check(sea, x -1 , y);
-	bool right  = check(sea, x +1, y);
+	bool up = checkFish(sea, x , y -1 );
+	bool down  = checkFish(sea, x , y + 1 );
+	bool left  = checkFish(sea, x -1 , y);
+	bool right  = checkFish(sea, x +1, y);
+	int option = 0;
    
 	//creating this varible to make a random move.
-	int direction = rand() % 4; 
+	if(up || down || left || right)
+	{
+		option = 1;
+	}
+	else
+	{
+		up = check(sea, x , y -1 );
+		down  = check(sea, x , y + 1 );
+		left  = check(sea, x -1 , y);
+		right  = check(sea, x +1, y);
 
-
-
-		if (direction == 0 && left)
+		if(up || down || left || right)
 		{
+			option = 1;
+		}
+	}
+   
+	//creating this varible to make a random move.
+	while (option > 0)
+	{
+		int direction = rand() % 4; 
+
+		if (direction == 0 && up)
+		{
+			cout << "UP" << endl;
 			int newPos = y - 1;
 			if(newPos < 0)
 			{
 				newPos = width - 1;
 			}
-			sea[x][newPos] = sea[x][y];
+			sea[x][newPos] = sea[x][y]; //moves the shark or fish
 			sea[x][newPos].processed = true;
 			sea[x][y] = Grid();
+			option = 0;
 		}
-		else if (direction == 1 && right)
+		else if (direction == 1 && down)
 		{
-		
+			cout << "DOWN" << endl;
 			int newPos = y + 1;
 			if(newPos >= width)
 			{
@@ -230,10 +325,11 @@ void moveShark(vector<vector<Grid>> &sea , int x ,int y)
 			sea[x][newPos] = sea[x][y];
 			sea[x][newPos].processed = true;
 			sea[x][y] = Grid();
+			option = 0;
 		}
-		else if (direction == 2 && up)
+		else if (direction == 2 && left)
 		{
-			
+			cout << "LEFT" << endl;
 			int newPos = x - 1;
 			if(newPos < 0)
 			{
@@ -242,11 +338,11 @@ void moveShark(vector<vector<Grid>> &sea , int x ,int y)
 			sea[newPos][y] = sea[x][y];
 			sea[newPos][y].processed = true;
 			sea[x][y] = Grid();
-		
+			option = 0;		
 		}
-		else if (direction == 3 && down)
+		else if (direction == 3 && right)
 		{
-			 
+			 cout << "RIGHT" << endl;
 			int newPos = x + 1 ;
 			if(newPos >= height)
 			{
@@ -255,25 +351,27 @@ void moveShark(vector<vector<Grid>> &sea , int x ,int y)
 			sea[newPos][y] = sea[x][y];
 			sea[newPos][y].processed = true;
 			sea[x][y] = Grid();
+			option = 0;
 		}
+	}
 	
 }
 void sim(vector<vector<Grid>> &sea )
 {
-	for(int i = 0; i < width; i++)
+	for(int i = 0; i < height; i++)
     {
-        for(int j= 0; j < height; j++)
+        for(int j= 0; j < width; j++)
             {
-            	if(sea[i][j].processed == false)
+            	if(sea[j][i].processed == false)
             	{
-            		if(sea[i][j].symbol == fish)
+            		if(sea[j][i].symbol == fish)
 	            	{
 	            		//move fish
-	            		moveFish(sea, i, j);
+	            		moveFish(sea, j, i);
 	            	}
-	            	else if (sea[i][j].symbol == shark)
+	            	else if (sea[j][i].symbol == shark)
 	            	{
-	            		moveShark(sea, i,j);
+	            		moveShark(sea, j,i);
 	            	}
 	            	else
 	            	{
@@ -303,8 +401,7 @@ int main(void)
 	{
 		sea[i].resize(height);
 	}
-	//createSea(sea);
-   	draw(sea);
+   	
 	populate(sea, nFish, nShark);
 	while(true)
 	{
