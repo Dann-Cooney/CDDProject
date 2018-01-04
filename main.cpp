@@ -1,14 +1,14 @@
  /*
 
-	Authors: Johnathan Finlay
-			 Daniel Cooney
+	Authors:  Daniel Cooney
+			  Johnathan Finlay
 
 	Start Date: 2/12/17
 
 	Descritpion: Implementation of the Wator Simulation 
 
-	Last Updated: Time - 14:29
-			     Date - 11/12/17 
+	Last Updated: Time - 14:42
+			     Date - 16/12/17 
 
 ----------------------------------------------------
  */
@@ -60,16 +60,17 @@ public:
    {
      symbol = shark;
      age = 0;
-     hunger =0;
+     hunger = 0;
+     processed = true;
    }
 }
 };
 
 
-int nFish = 6;
-int nShark = 1;
-int const width = 3;
-int const height = 3;
+int nFish = 10;
+int nShark = 2;
+int const width = 15;
+int const height = 15;
 int randomXPos = 0;
 int randomYPos = 0;
 
@@ -84,6 +85,7 @@ for(int i = 0; i < height; i++)
             {
 		cout << sea[j][i].symbol;
 	    }
+
 	cout << endl;
     }
 }
@@ -99,13 +101,9 @@ void populate(vector<vector<Grid>> &sea , int nFish, int nShark)
 	    {
 		sea[randomXPos][randomYPos] = Grid(fish);
 		--nFish;
-	    }
-
 	    
-	    else if (sea[randomXPos][randomYPos].symbol == fish)
-	    {
-	    	cout << "here";
 	    }
+	    	
 	}
 
 	while (nShark > 0)
@@ -121,6 +119,8 @@ void populate(vector<vector<Grid>> &sea , int nFish, int nShark)
 }
 bool check(vector<vector<Grid>> &sea , int x ,int y)
 {
+	
+
 	if (x < 0 || x >= width)
 	{
 		if(x < 0)
@@ -145,13 +145,11 @@ bool check(vector<vector<Grid>> &sea , int x ,int y)
 	}
 	if(sea[x][y].symbol == water)
 	{
-		cout << "W";
 		return true;
 
 	}
 	else
 	{
-		cout << "N";
 		return false;
 	}
 }
@@ -182,13 +180,11 @@ bool checkFish(vector<vector<Grid>> &sea , int x ,int y)
 	}
 	if(sea[x][y].symbol == fish)
 	{
-		cout << "W";
 		return true;
 
 	}
 	else
 	{
-		cout << "N";
 		return false;
 	}
 }
@@ -202,6 +198,8 @@ void moveFish(vector<vector<Grid>> &sea , int x ,int y)
 	bool left  = check(sea, x -1 , y);
 	bool right  = check(sea, x +1, y);
 	int option = 0;
+
+
 	if(up || down || left || right)
 	{
 		option = 1;
@@ -214,7 +212,6 @@ void moveFish(vector<vector<Grid>> &sea , int x ,int y)
 
 		if (direction == 0 && up)
 		{
-			cout << "UP" << endl;
 			int newPos = y - 1;
 			if(newPos < 0)
 			{
@@ -222,12 +219,12 @@ void moveFish(vector<vector<Grid>> &sea , int x ,int y)
 			}
 			sea[x][newPos] = sea[x][y];
 			sea[x][newPos].processed = true;
+			sea[x][y].age++;
 			sea[x][y] = Grid();
 			option = 0;
 		}
 		else if (direction == 1 && down)
 		{
-			cout << "DOWN" << endl;
 			int newPos = y + 1;
 			if(newPos >= width)
 			{
@@ -240,7 +237,6 @@ void moveFish(vector<vector<Grid>> &sea , int x ,int y)
 		}
 		else if (direction == 2 && left)
 		{
-			cout << "LEFT" << endl;
 			int newPos = x - 1;
 			if(newPos < 0)
 			{
@@ -253,7 +249,6 @@ void moveFish(vector<vector<Grid>> &sea , int x ,int y)
 		}
 		else if (direction == 3 && right)
 		{
-			 cout << "RIGHT" << endl;
 			int newPos = x + 1 ;
 			if(newPos >= height)
 			{
@@ -303,7 +298,6 @@ void moveShark(vector<vector<Grid>> &sea , int x ,int y)
 
 		if (direction == 0 && up)
 		{
-			cout << "UP" << endl;
 			int newPos = y - 1;
 			if(newPos < 0)
 			{
@@ -311,12 +305,12 @@ void moveShark(vector<vector<Grid>> &sea , int x ,int y)
 			}
 			sea[x][newPos] = sea[x][y]; //moves the shark or fish
 			sea[x][newPos].processed = true;
+
 			sea[x][y] = Grid();
 			option = 0;
 		}
 		else if (direction == 1 && down)
 		{
-			cout << "DOWN" << endl;
 			int newPos = y + 1;
 			if(newPos >= width)
 			{
@@ -329,7 +323,7 @@ void moveShark(vector<vector<Grid>> &sea , int x ,int y)
 		}
 		else if (direction == 2 && left)
 		{
-			cout << "LEFT" << endl;
+			
 			int newPos = x - 1;
 			if(newPos < 0)
 			{
@@ -342,7 +336,6 @@ void moveShark(vector<vector<Grid>> &sea , int x ,int y)
 		}
 		else if (direction == 3 && right)
 		{
-			 cout << "RIGHT" << endl;
 			int newPos = x + 1 ;
 			if(newPos >= height)
 			{
@@ -397,17 +390,20 @@ int main(void)
 	srand(time(NULL));
 	vector<vector<Grid>> sea ;
 	sea.resize(width);
+	
 	for( int i = 0; i < width; i++)
 	{
 		sea[i].resize(height);
 	}
    	
 	populate(sea, nFish, nShark);
+
 	while(true)
 	{
 		sim(sea);
 		resetFish(sea);
 		draw(sea);
 		cin.get();
+
 	}
 }
