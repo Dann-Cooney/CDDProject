@@ -4,10 +4,12 @@
  |	Authors:        | Daniel Cooney   || Jonathan Finlay     | 
  |	Start Date: 	| 2/12/17                                |
  |	Descritpion: 	| Implementation of the Wator Simulation |
- |	Last Updated: 	| Date - 5/1/18 || Time - 02:50am        |  
+ |	Last Updated: 	| Date - 5/1/18 || Time - 02:50am        |
   -----------------------------------------------------------
 
+
  */
+
 
 #include <iostream>
 #include <string>
@@ -70,9 +72,9 @@ class Grid
 
 
 int nFish = 30;
-int nShark = 1;
-int const width = 10;
-int const height = 10;
+int nShark = 2;
+int const width = 15;
+int const height = 15;
 int randomXPos = 0;
 int randomYPos = 0;
 int fishBreed = 4;
@@ -268,6 +270,7 @@ void moveFish(vector<vector<Grid>> &sea , int x ,int y)
 				sea[x][newPos].age++;
 				sea[x][y] = Grid();
 				move = 0;
+
 				if(sea[x][newPos].age >= fishBreed)
 				{
 					sea[x][y] = Grid(fish);
@@ -479,6 +482,13 @@ void moveShark(vector<vector<Grid>> &sea , int x ,int y)
 	{
 		sea[x][y].age++;
 		sea[x][y].hunger++;
+
+		if(sea[x][y].hunger == 4)
+				{
+					sea[x][y] = Grid();
+					nShark--;
+				}
+
 		sea[x][y].processed = true;
 	}
 	else
@@ -670,10 +680,8 @@ int main(void)
 		sim(sea);
 		cout << endl;
 		cout << "_______WATOR Simulation______" << endl;
-		cout << "Fish:"  << nFish << endl;
-		cout << "Shark:"  << nShark << endl;
 
-		 this_thread::sleep_for(chrono::milliseconds(400));
+	 this_thread::sleep_for(chrono::milliseconds(400));
 
 	}
 }
