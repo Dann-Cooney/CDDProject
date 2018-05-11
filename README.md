@@ -26,7 +26,7 @@ Stage 4: Optimisation
 
 * **Daniel Cooney**
 
-* **Johnathan Finlay**
+* **Jonathan Finlay**
 
 
 
