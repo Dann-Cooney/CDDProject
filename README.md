@@ -1,33 +1,32 @@
 # Wator Simulation
 Implementation of the Wator Simulation
-# Distributed and Concurrent Device Development
+# Project Description
+The project will be completed in teams with two people in each team. Development
+should be undertaken using pair programming. There are four stages in the project with
+each stage worth equal marks.
 
-These lab exercises are apart of the 4th Year Concurrent and Distributed Application Development module for the Bsc Software Development course, IT Carlow.
 
-
-### Contents
+### Stages
 
 ```
-Lab 1: Semaphores
+Stage 1: Serial Implementation
 ```
 ```
-Lab 2: Rendezvous
+Stage 2: Concurrent Implementation
 ```
 ```
-Lab 3: Mutex
+Stage 3: Benchmarking
 ```
 ```
-Lab 4: Barriers
+Stage 4: Optimisation
 ```
-```
-Lab 5:
-```
+
 
 ## Authors
 
-* **Student: Daniel Cooney**
+* **Daniel Cooney**
 
-* **Student No: C00197455**
+* **Johnathan Finlay**
 
 
 
